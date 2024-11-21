@@ -7,6 +7,13 @@ import transactionservice.model.Transaction;
 import transactionservice.service.TransactionService;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/transactions")
@@ -38,6 +45,15 @@ public class TransactionController {
     @PostMapping("/validate/user")
     public String validateUser(@RequestHeader String  token) {
         return transactionService.validateUser(token);
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+        boolean isDeleted = transactionService.deleteTransaction(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();  // Status 204 - No Content
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // Status 404 - Not Found
     }
 
 }
